@@ -17,7 +17,7 @@ export function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoContainerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
-  
+
   const headingRef = useRef<HTMLHeadingElement>(null);
   const subheadingRef = useRef<HTMLParagraphElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -79,7 +79,7 @@ export function Hero() {
         // Setup and play next video
         if (nextVideo) {
           nextVideo.currentTime = 0;
-          nextVideo.play().catch(() => {});
+          nextVideo.play().catch(() => { });
         }
 
         // Swap visual slide states
@@ -107,16 +107,16 @@ export function Hero() {
         { opacity: 0, y: 50 },
         { opacity: 1, y: 0, duration: 0.9, ease: "power3.out" }
       )
-      .fromTo(subheading,
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" },
-        "-=0.6"
-      )
-      .fromTo(button,
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" },
-        "-=0.5"
-      );
+        .fromTo(subheading,
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" },
+          "-=0.6"
+        )
+        .fromTo(button,
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" },
+          "-=0.5"
+        );
     }
   }, [currentSlide]);
 
@@ -182,13 +182,13 @@ export function Hero() {
       className="h-screen w-full relative overflow-hidden bg-[#141414] select-none"
     >
       {/* 1. GPU-Accelerated Parallax Video Canvas Container */}
-      <div 
+      <div
         ref={videoContainerRef}
         className="absolute inset-0 w-[105%] h-[105%] left-[-2.5%] top-[-2.5%] z-0"
       >
         <video
           ref={videoRefs[0]}
-          src="/hero-1.mp4"
+          src="https://res.cloudinary.com/rznuvs5r/video/upload/v1782976841/hero-1_jntjwf.mp4"
           preload="auto"
           muted
           playsInline
@@ -200,7 +200,7 @@ export function Hero() {
         />
         <video
           ref={videoRefs[1]}
-          src="/hero-2.mp4"
+          src="https://res.cloudinary.com/rznuvs5r/video/upload/v1782976839/hero-2_t0ppkd.mp4"
           preload="none"
           muted
           playsInline
@@ -211,7 +211,7 @@ export function Hero() {
         />
         <video
           ref={videoRefs[2]}
-          src="/hero-3.mp4"
+          src="https://res.cloudinary.com/rznuvs5r/video/upload/v1782976836/hero-3_ov6msw.mp4"
           preload="none"
           muted
           playsInline
@@ -223,7 +223,7 @@ export function Hero() {
       </div>
 
       {/* 2. Premium Light Gradient Mask Overlay */}
-      <div 
+      <div
         className={cn(
           "absolute inset-0 z-10 transition-all duration-1000 bg-gradient-to-r pointer-events-none",
           slides[currentSlide].overlayClass
@@ -232,29 +232,29 @@ export function Hero() {
 
       {/* 3. Centered Content bounds (1400px maximum width aligned) */}
       <div className="absolute inset-0 z-20 flex items-center max-w-[1400px] mx-auto px-6 sm:px-12 md:px-16 pointer-events-none">
-        <div 
+        <div
           ref={textRef}
           className="max-w-[620px] text-left flex flex-col items-start pointer-events-auto"
         >
           <span className="text-xs uppercase tracking-widest text-[#F7F4EE]/60 font-bold mb-5 block">
             {slides[currentSlide].chapter}
           </span>
-          <H1 
-            ref={headingRef} 
+          <H1
+            ref={headingRef}
             className="text-white text-[34px] sm:text-[46px] md:text-[58px] font-extrabold tracking-tight leading-[1.15] mb-6 normal-case"
           >
             {slides[currentSlide].heading}
           </H1>
-          <Body 
+          <Body
             ref={subheadingRef}
             className="text-[16px] sm:text-[18px] md:text-[20px] font-sans font-normal text-white/85 leading-[1.65] max-w-[580px] mb-8"
           >
             {slides[currentSlide].subheading}
           </Body>
-          
-          <Button 
+
+          <Button
             ref={buttonRef}
-            variant="primary" 
+            variant="primary"
             magnetic={true}
             className="h-[58px] px-8 rounded-[18px] text-base"
           >
@@ -296,8 +296,8 @@ export function Hero() {
             {idx === currentSlide ? (
               // Active expanded pill with play progress fill
               <div className="h-2 w-12 rounded-full bg-white/20 overflow-hidden relative transition-all duration-500">
-                <div 
-                  className="h-full bg-accent-terracotta transition-all duration-100 ease-linear rounded-full" 
+                <div
+                  className="h-full bg-accent-terracotta transition-all duration-100 ease-linear rounded-full"
                   style={{ width: `${progress}%` }}
                 />
               </div>

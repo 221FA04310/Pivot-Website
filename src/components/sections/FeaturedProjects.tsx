@@ -44,7 +44,7 @@ const projects: Project[] = [
     industry: "Spatial Intelligence",
     desc: "A premium spatial intelligence suite that maps real-time user behavior to responsive architectural ambient lights.",
     tech: ["Next.js", "Three.js", "GSAP", "TensorFlow"],
-    videoUrl: "/hero-1.mp4",
+    videoUrl: "https://res.cloudinary.com/rznuvs5r/video/upload/v1782976841/hero-1_jntjwf.mp4",
     client: "AeroSpace Tech",
     duration: "6 Months",
     challenge: "Traditional smart workspaces feel static and require manual inputs. Our client wanted an ambient environment that adapts autonomously to group sizes, lighting conditions, and attention signals without cameras or privacy concerns.",
@@ -65,7 +65,7 @@ const projects: Project[] = [
     industry: "Fintech Platforms",
     desc: "A real-time financial tracking dashboard managing multi-region assets under sub-millisecond execution constraints.",
     tech: ["React", "WebSockets", "D3.js", "Tailwind CSS"],
-    videoUrl: "/hero-2.mp4",
+    videoUrl: "https://res.cloudinary.com/rznuvs5r/video/upload/v1782976839/hero-2_t0ppkd.mp4",
     client: "Centrum Capital",
     duration: "8 Months",
     challenge: "Centrum needed to present high-frequency asset movements in an intuitive, non-cluttered editorial layout to institutional managers who make million-dollar decisions under extreme cognitive loads.",
@@ -86,7 +86,7 @@ const projects: Project[] = [
     industry: "Logistics Systems",
     desc: "A cross-device premium tracking app integrating automated route mapping and driver safety parameters.",
     tech: ["React Native", "Mapbox", "Framer Motion", "Node.js"],
-    videoUrl: "/hero-3.mp4",
+    videoUrl: "https://res.cloudinary.com/rznuvs5r/video/upload/v1782976836/hero-3_ov6msw.mp4",
     client: "Global Delivery Corp",
     duration: "5 Months",
     challenge: "Delivering tracking data to field workers in environments with poor connection speeds, while ensuring safety warnings do not distract drivers during heavy transit.",
@@ -106,7 +106,7 @@ const projects: Project[] = [
 export function FeaturedProjects() {
   const containerRef = useRef<HTMLDivElement>(null);
   const introRef = useRef<HTMLDivElement>(null);
-  
+
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [triggerRect, setTriggerRect] = useState<DOMRect | null>(null);
   const [isCaseStudyOpen, setIsCaseStudyOpen] = useState(false);
@@ -265,7 +265,7 @@ export function FeaturedProjects() {
   };
 
   return (
-    <section 
+    <section
       ref={containerRef}
       className="w-full relative py-28 bg-[#F7F4EE] border-t border-border/40 select-none overflow-hidden"
     >
@@ -276,7 +276,7 @@ export function FeaturedProjects() {
       </div>
 
       {/* Headline Intro */}
-      <div 
+      <div
         ref={introRef}
         className="max-w-[720px] mx-auto text-center px-6 mb-28 relative z-10 flex flex-col items-center gap-6"
       >
@@ -292,12 +292,12 @@ export function FeaturedProjects() {
       {/* Editorial Exhibits */}
       <div className="max-w-[1400px] mx-auto px-6 sm:px-12 md:px-16 flex flex-col gap-36 relative z-10">
         {projects.map((project, idx) => (
-          <div 
+          <div
             key={project.id}
             className="project-exhibit-card w-full h-[70vh] sm:h-[80vh] flex flex-col justify-between relative group pointer-events-auto"
           >
             {/* Visual media block */}
-            <div 
+            <div
               ref={(el) => {
                 cardImageRefs.current[idx] = el;
               }}
@@ -308,7 +308,7 @@ export function FeaturedProjects() {
             >
               {/* Overlay sheen gradients */}
               <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#141414]/75 via-[#141414]/15 to-transparent pointer-events-none" />
-              
+
               {/* Media element: AutoPlay video on hover, fallback Ken Burns image scaling */}
               <video
                 src={project.videoUrl}
@@ -322,7 +322,7 @@ export function FeaturedProjects() {
                 ref={(el) => {
                   if (el) {
                     if (hoveredIdx === idx) {
-                      el.play().catch(() => {});
+                      el.play().catch(() => { });
                     } else {
                       el.pause();
                       el.currentTime = 0;
@@ -341,7 +341,7 @@ export function FeaturedProjects() {
                     {project.title}
                   </H3>
                 </div>
-                
+
                 <div className="flex items-center gap-2 group/btn py-2 px-5 rounded-full bg-[#FCFBF8]/10 backdrop-blur-md border border-[#FCFBF8]/10 text-white/90 hover:text-white transition-all duration-300">
                   <span className="text-xs uppercase tracking-wider font-semibold">
                     Inspect Artifacts
@@ -356,11 +356,11 @@ export function FeaturedProjects() {
               <p className="text-left text-sm sm:text-base text-foreground/75 leading-relaxed max-w-[640px]">
                 {project.desc}
               </p>
-              
+
               {/* Project tech tags */}
               <div className="flex flex-wrap gap-2 justify-start sm:justify-end max-w-sm">
                 {project.tech.map((tag) => (
-                  <span 
+                  <span
                     key={tag}
                     className="text-[11px] uppercase tracking-widest px-3 py-1.5 rounded-full border border-border bg-[#FCFBF8] text-foreground/60 font-semibold"
                   >
@@ -375,12 +375,12 @@ export function FeaturedProjects() {
 
       {/* Shared Element Case Study Detailed Overlay */}
       {isCaseStudyOpen && selectedProject && (
-        <div 
+        <div
           ref={detailOverlayRef}
           className="fixed inset-0 z-[1000] overflow-y-auto bg-transparent select-none"
         >
           {/* 1. Fullscreen Zooming Media block */}
-          <div 
+          <div
             ref={overlayHeroRef}
             className="relative overflow-hidden z-10"
           >
@@ -393,7 +393,7 @@ export function FeaturedProjects() {
               loop
               className="absolute inset-0 w-full h-full object-cover"
             />
-            
+
             {/* Header info in Hero */}
             <div className="absolute bottom-12 left-10 right-10 z-20 flex flex-col md:flex-row md:items-end justify-between gap-8 text-left text-white max-w-[1400px] mx-auto">
               <div className="space-y-3">
@@ -428,12 +428,12 @@ export function FeaturedProjects() {
           </div>
 
           {/* 2. Scrollable Details content page */}
-          <div 
+          <div
             ref={overlayContentRef}
             className="w-full relative z-20 bg-[#F7F4EE] py-20 px-6 sm:px-12 md:px-16"
           >
             <div className="max-w-[1000px] mx-auto flex flex-col gap-28">
-              
+
               {/* Side-by-side Challenge / Solution grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-16 text-left">
                 <div className="space-y-6">
@@ -443,7 +443,7 @@ export function FeaturedProjects() {
                     {selectedProject.challenge}
                   </p>
                 </div>
-                
+
                 <div className="space-y-6">
                   <span className="text-xs uppercase tracking-widest text-accent-forestGreen font-semibold">The Solution</span>
                   <H3 className="text-foreground tracking-tight font-extrabold">Engineering Digital Transformation</H3>
@@ -466,7 +466,7 @@ export function FeaturedProjects() {
                     { step: "05", name: "Testing" },
                     { step: "06", name: "Deployment" }
                   ].map((phase) => (
-                    <div 
+                    <div
                       key={phase.step}
                       className="p-5 rounded-xl border border-border/30 bg-[#FCFBF8] shadow-sm flex flex-col gap-3"
                     >
@@ -483,7 +483,7 @@ export function FeaturedProjects() {
                 <H3 className="text-foreground font-extrabold tracking-tight">Quantifiable Success Outcomes</H3>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
                   {selectedProject.results.map((res, rIdx) => (
-                    <div 
+                    <div
                       key={rIdx}
                       className="p-8 rounded-premium bg-[#FCFBF8] border border-border/40 flex flex-col gap-3 items-start shadow-sm"
                     >
@@ -504,7 +504,7 @@ export function FeaturedProjects() {
                 <H3 className="text-foreground font-extrabold tracking-tight">The Modern Engineering Stack</H3>
                 <div className="flex flex-wrap gap-3 pt-4">
                   {selectedProject.tech.map((t) => (
-                    <span 
+                    <span
                       key={t}
                       className="text-xs uppercase tracking-widest px-4 py-2 border border-border/40 bg-[#FCFBF8] rounded-full text-foreground/70 hover:border-accent-softPlum hover:text-accent-softPlum transition-colors duration-300 font-semibold shadow-sm cursor-pointer"
                     >
@@ -534,15 +534,15 @@ export function FeaturedProjects() {
                   Let&apos;s engineer your next digital success story together.
                 </Body>
                 <div className="flex flex-wrap gap-4 justify-center pt-4">
-                  <Button 
-                    variant="primary" 
+                  <Button
+                    variant="primary"
                     onClick={closeCaseStudy}
                     className="h-[58px] px-8 rounded-xl text-base"
                   >
                     Start Your Project
                   </Button>
-                  <Button 
-                    variant="secondary" 
+                  <Button
+                    variant="secondary"
                     onClick={closeCaseStudy}
                     className="h-[58px] px-8 rounded-xl text-base"
                   >
