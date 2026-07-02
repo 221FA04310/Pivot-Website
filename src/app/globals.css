@@ -1,0 +1,133 @@
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,900&f[]=general-sans@300,400,500,600,700,900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #F7F4EE;
+    --background-secondary: #EFE9E1;
+    --dark-section: #1E1E1E;
+    --foreground: #1A1A1A;
+    --border: rgba(26, 26, 26, 0.08);
+    --card-bg: #FCFBF8;
+    --card-border: rgba(26, 26, 26, 0.05);
+
+    --accent-terracotta: #C96B4A;
+    --accent-muted-gold: #C8A54A;
+    --accent-forest-green: #4F6F52;
+    --accent-soft-plum: #6F4E8B;
+  }
+
+  .dark {
+    --background: #121212;
+    --background-secondary: #1E1E1E;
+    --dark-section: #0F0F0F;
+    --foreground: #F7F4EE;
+    --border: rgba(247, 244, 238, 0.08);
+    --card-bg: #1C1C1C;
+    --card-border: rgba(247, 244, 238, 0.04);
+
+    --accent-terracotta: #E27D5B;
+    --accent-muted-gold: #D4B26F;
+    --accent-forest-green: #628265;
+    --accent-soft-plum: #8764A8;
+  }
+
+  html {
+    scroll-behavior: initial; /* Essential for Lenis smooth scroll */
+  }
+
+  body {
+    @apply antialiased font-sans transition-colors duration-500;
+    color: var(--foreground);
+    background: var(--background);
+    overflow-x: hidden;
+  }
+
+  /* Custom selection matches premium terracotta highlight */
+  ::selection {
+    background-color: var(--accent-terracotta);
+    color: #FFFFFF;
+  }
+
+  /* Fine scrollbar matching editorial aesthetic */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--background);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-terracotta);
+  }
+
+  /* Custom Cursor styles */
+  .custom-cursor {
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    background-color: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(1.5px);
+    z-index: 99999;
+    transform: translate(-50%, -50%);
+    will-change: transform;
+    display: none;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .custom-cursor {
+      display: block;
+    }
+  }
+
+  /* Focus outline settings for keyboard accessibility */
+  *:focus-visible {
+    outline: 2px solid var(--accent-terracotta);
+    outline-offset: 4px;
+  }
+}
+
+@layer utilities {
+  /* Cinematic grid lines mapping display columns */
+  .grid-overlay {
+    background-size: calc((100% - 11 * 32px) / 12 + 32px) 100%;
+    background-image: linear-gradient(to right, var(--border) 1px, transparent 1px);
+  }
+
+  /* Subdued noise filter for organic texture */
+  .bg-noise {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.015'/%3E%3C/svg%3E");
+  }
+}
+
+/* Lenis scroll bindings */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
