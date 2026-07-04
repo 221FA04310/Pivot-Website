@@ -267,7 +267,7 @@ export function FeaturedProjects() {
   return (
     <section
       ref={containerRef}
-      className="w-full relative py-28 bg-[#F7F4EE] border-t border-border/40 select-none overflow-hidden"
+      className="w-full relative py-28 bg-[#F1ECE5] border-t border-border/40 select-none overflow-hidden"
     >
       {/* Subtle floating ambient grids */}
       <div className="absolute inset-0 z-0 pointer-events-none opacity-20">
@@ -280,11 +280,11 @@ export function FeaturedProjects() {
         ref={introRef}
         className="max-w-[720px] mx-auto text-center px-6 mb-28 relative z-10 flex flex-col items-center gap-6"
       >
-        <span className="text-xs uppercase tracking-widest text-accent-terracotta font-bold">
+        <span className="text-xs uppercase tracking-widest text-[#A96A4D] font-bold">
           Selected Portfolio
         </span>
-        <H2 className="uppercase">Featured Projects</H2>
-        <Body className="text-[#555555] leading-relaxed">
+        <H2 className="uppercase text-[#1B2430]">Featured Projects</H2>
+        <Body className="text-[#5B6575] leading-relaxed">
           Every project began with one bold idea. Explore how we transformed visions into digital experiences that create real business impact.
         </Body>
       </div>
@@ -334,7 +334,7 @@ export function FeaturedProjects() {
               {/* Title & Metadata overlays */}
               <div className="absolute bottom-8 left-8 right-8 z-20 flex flex-col sm:flex-row sm:items-end justify-between gap-6 pointer-events-none">
                 <div className="space-y-2 text-left">
-                  <span className="text-xs font-semibold tracking-widest text-[#F7F4EE]/60 uppercase">
+                  <span className="text-xs font-semibold tracking-widest text-[#FCFAF6]/70 uppercase">
                     {project.industry}
                   </span>
                   <H3 className="text-white text-3xl sm:text-4xl font-extrabold tracking-tight">
@@ -342,7 +342,7 @@ export function FeaturedProjects() {
                   </H3>
                 </div>
 
-                <div className="flex items-center gap-2 group/btn py-2 px-5 rounded-full bg-[#FCFBF8]/10 backdrop-blur-md border border-[#FCFBF8]/10 text-white/90 hover:text-white transition-all duration-300">
+                <div className="flex items-center gap-2 group/btn py-2 px-5 rounded-full bg-white/12 backdrop-blur-md border border-white/20 text-white/90 hover:text-white transition-all duration-300">
                   <span className="text-xs uppercase tracking-wider font-semibold">
                     Inspect Artifacts
                   </span>
@@ -351,9 +351,12 @@ export function FeaturedProjects() {
               </div>
             </div>
 
+            {/* Bronze Hover Line */}
+            <div className="w-full h-[2px] bg-[#A96A4D] scale-x-0 origin-left transition-transform duration-500 group-hover:scale-x-100 mt-4" />
+
             {/* Typography metadata under the card */}
             <div className="w-full h-[22%] pt-6 flex flex-col sm:flex-row items-start justify-between gap-6">
-              <p className="text-left text-sm sm:text-base text-foreground/75 leading-relaxed max-w-[640px]">
+              <p className="text-left text-sm sm:text-base text-[#5B6575] leading-relaxed max-w-[640px]">
                 {project.desc}
               </p>
 
@@ -362,7 +365,7 @@ export function FeaturedProjects() {
                 {project.tech.map((tag) => (
                   <span
                     key={tag}
-                    className="text-[11px] uppercase tracking-widest px-3 py-1.5 rounded-full border border-border bg-[#FCFBF8] text-foreground/60 font-semibold"
+                    className="text-[11px] uppercase tracking-widest px-3 py-1.5 rounded-full border border-[#A96A4D]/15 bg-[#FCFAF6] text-[#5B6575] font-semibold"
                   >
                     {tag}
                   </span>
@@ -430,33 +433,33 @@ export function FeaturedProjects() {
           {/* 2. Scrollable Details content page */}
           <div
             ref={overlayContentRef}
-            className="w-full relative z-20 bg-[#F7F4EE] py-20 px-6 sm:px-12 md:px-16"
+            className="w-full relative z-20 bg-[#F8F6F2] py-20 px-6 sm:px-12 md:px-16"
           >
             <div className="max-w-[1000px] mx-auto flex flex-col gap-28">
 
               {/* Side-by-side Challenge / Solution grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-16 text-left">
                 <div className="space-y-6">
-                  <span className="text-xs uppercase tracking-widest text-accent-terracotta font-semibold">The Challenge</span>
-                  <H3 className="text-foreground tracking-tight font-extrabold">Addressing Complex Systems Needs</H3>
-                  <p className="text-base text-foreground/75 leading-relaxed font-sans font-normal">
+                  <span className="text-xs uppercase tracking-widest text-[#A96A4D] font-semibold">The Challenge</span>
+                  <H3 className="text-[#1B2430] tracking-tight font-extrabold">Addressing Complex Systems Needs</H3>
+                  <p className="text-base text-[#5B6575] leading-relaxed font-sans font-normal">
                     {selectedProject.challenge}
                   </p>
                 </div>
 
                 <div className="space-y-6">
-                  <span className="text-xs uppercase tracking-widest text-accent-forestGreen font-semibold">The Solution</span>
-                  <H3 className="text-foreground tracking-tight font-extrabold">Engineering Digital Transformation</H3>
-                  <p className="text-base text-foreground/75 leading-relaxed font-sans font-normal">
+                  <span className="text-xs uppercase tracking-widest text-[#A96A4D] font-semibold">The Solution</span>
+                  <H3 className="text-[#1B2430] tracking-tight font-extrabold">Engineering Digital Transformation</H3>
+                  <p className="text-base text-[#5B6575] leading-relaxed font-sans font-normal">
                     {selectedProject.solution}
                   </p>
                 </div>
               </div>
 
               {/* Design process timeline visualizer */}
-              <div className="w-full border-t border-border/40 pt-16 flex flex-col gap-10 text-left">
-                <span className="text-xs uppercase tracking-widest text-accent-mutedGold font-semibold">Methodology</span>
-                <H3 className="text-foreground font-extrabold tracking-tight">Our End-to-End Design Process</H3>
+              <div className="w-full border-t border-[#A96A4D]/15 pt-16 flex flex-col gap-10 text-left">
+                <span className="text-xs uppercase tracking-widest text-[#D6B26E] font-semibold">Methodology</span>
+                <H3 className="text-[#1B2430] font-extrabold tracking-tight">Our End-to-End Design Process</H3>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6 pt-6">
                   {[
                     { step: "01", name: "Research" },
@@ -468,29 +471,29 @@ export function FeaturedProjects() {
                   ].map((phase) => (
                     <div
                       key={phase.step}
-                      className="p-5 rounded-xl border border-border/30 bg-[#FCFBF8] shadow-sm flex flex-col gap-3"
+                      className="p-5 rounded-xl border border-[#A96A4D]/15 bg-[#FCFAF6] shadow-sm flex flex-col gap-3"
                     >
-                      <span className="text-xs text-accent-terracotta font-extrabold">{phase.step}</span>
-                      <span className="text-sm font-semibold font-heading text-foreground">{phase.name}</span>
+                      <span className="text-xs text-[#A96A4D] font-extrabold">{phase.step}</span>
+                      <span className="text-sm font-semibold font-heading text-[#1B2430]">{phase.name}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
               {/* Business Results Segment */}
-              <div className="w-full border-t border-border/40 pt-16 flex flex-col gap-10 text-left">
-                <span className="text-xs uppercase tracking-widest text-accent-terracotta font-semibold">Performance Metrics</span>
-                <H3 className="text-foreground font-extrabold tracking-tight">Quantifiable Success Outcomes</H3>
+              <div className="w-full border-t border-[#A96A4D]/15 pt-16 flex flex-col gap-10 text-left">
+                <span className="text-xs uppercase tracking-widest text-[#A96A4D] font-semibold">Performance Metrics</span>
+                <H3 className="text-[#1B2430] font-extrabold tracking-tight">Quantifiable Success Outcomes</H3>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
                   {selectedProject.results.map((res, rIdx) => (
                     <div
                       key={rIdx}
-                      className="p-8 rounded-premium bg-[#FCFBF8] border border-border/40 flex flex-col gap-3 items-start shadow-sm"
+                      className="p-8 rounded-premium bg-[#FCFAF6] border border-[#A96A4D]/15 flex flex-col gap-3 items-start shadow-sm"
                     >
-                      <span className="text-4xl sm:text-5xl font-heading font-extrabold text-accent-terracotta">
+                      <span className="text-4xl sm:text-5xl font-heading font-extrabold text-[#A96A4D]">
                         {res.value}
                       </span>
-                      <span className="text-sm text-foreground/60 font-semibold font-sans">
+                      <span className="text-sm text-[#5B6575] font-semibold font-sans">
                         {res.label}
                       </span>
                     </div>
@@ -499,14 +502,14 @@ export function FeaturedProjects() {
               </div>
 
               {/* Technologies Used Grid */}
-              <div className="w-full border-t border-border/40 pt-16 flex flex-col gap-8 text-left">
-                <span className="text-xs uppercase tracking-widest text-accent-softPlum font-semibold">Integrations</span>
-                <H3 className="text-foreground font-extrabold tracking-tight">The Modern Engineering Stack</H3>
+              <div className="w-full border-t border-[#A96A4D]/15 pt-16 flex flex-col gap-8 text-left">
+                <span className="text-xs uppercase tracking-widest text-[#A96A4D] font-semibold">Integrations</span>
+                <H3 className="text-[#1B2430] font-extrabold tracking-tight">The Modern Engineering Stack</H3>
                 <div className="flex flex-wrap gap-3 pt-4">
                   {selectedProject.tech.map((t) => (
                     <span
                       key={t}
-                      className="text-xs uppercase tracking-widest px-4 py-2 border border-border/40 bg-[#FCFBF8] rounded-full text-foreground/70 hover:border-accent-softPlum hover:text-accent-softPlum transition-colors duration-300 font-semibold shadow-sm cursor-pointer"
+                      className="text-xs uppercase tracking-widest px-4 py-2 border border-[#A96A4D]/15 bg-[#FCFAF6] rounded-full text-[#5B6575] hover:border-[#A96A4D] hover:text-[#A96A4D] transition-colors duration-300 font-semibold shadow-sm cursor-pointer"
                     >
                       {t}
                     </span>
@@ -515,22 +518,22 @@ export function FeaturedProjects() {
               </div>
 
               {/* Client Testimonial quote card */}
-              <div className="w-full rounded-premium bg-[#EFE9E1]/50 border border-border/30 p-8 sm:p-12 text-left relative overflow-hidden">
-                <div className="absolute top-0 right-0 translate-x-[20px] translate-y-[-20px] text-foreground/5 text-9xl font-serif">
+              <div className="w-full rounded-premium bg-[#F1ECE5] border border-[#A96A4D]/15 p-8 sm:p-12 text-left relative overflow-hidden">
+                <div className="absolute top-0 right-0 translate-x-[20px] translate-y-[-20px] text-[#1B2430]/5 const-quotes text-9xl font-serif">
                   &ldquo;
                 </div>
-                <p className="text-xl sm:text-2xl font-heading font-medium text-foreground/90 italic leading-relaxed mb-6">
+                <p className="text-xl sm:text-2xl font-heading font-medium text-[#1B2430]/90 italic leading-relaxed mb-6">
                   &ldquo;{selectedProject.testimonial.quote}&rdquo;
                 </p>
-                <span className="text-xs uppercase tracking-widest text-foreground/50 font-bold">
+                <span className="text-xs uppercase tracking-widest text-[#5B6575] font-bold">
                   — {selectedProject.testimonial.author}
                 </span>
               </div>
 
               {/* Case study closing call to action button */}
-              <div className="w-full border-t border-border/40 pt-16 flex flex-col items-center gap-6 text-center">
-                <H3 className="font-extrabold tracking-tight">Inspired by this project?</H3>
-                <Body className="text-sm text-foreground/60 leading-relaxed max-w-sm">
+              <div className="w-full border-t border-[#A96A4D]/15 pt-16 flex flex-col items-center gap-6 text-center">
+                <H3 className="font-extrabold tracking-tight text-[#1B2430]">Inspired by this project?</H3>
+                <Body className="text-sm text-[#5B6575] leading-relaxed max-w-sm">
                   Let&apos;s engineer your next digital success story together.
                 </Body>
                 <div className="flex flex-wrap gap-4 justify-center pt-4">

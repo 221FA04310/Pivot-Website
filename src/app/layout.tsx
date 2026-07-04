@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter, Outfit } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { LenisProvider } from "@/components/providers/LenisProvider";
-import { CustomCursor } from "@/components/ui/CustomCursor";
 import "./globals.css";
 
 
@@ -63,15 +62,27 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Preload Hero Video 1 for seamless instant play */}
+        <link
+          rel="preload"
+          href="https://res.cloudinary.com/rznuvs5r/video/upload/v1782976841/hero-1_jntjwf.mp4"
+          as="video"
+          type="video/mp4"
+        />
+        {/* Preconnect to Fontshare CDN for Satoshi font files */}
+        <link rel="preconnect" href="https://api.fontshare.com" />
+        <link rel="preconnect" href="https://cdn.fontshare.com" crossOrigin="anonymous" />
+      </head>
       <body className={`${inter.variable} ${outfit.variable} antialiased`}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
-          enableSystem
+          defaultTheme="light"
+          forcedTheme="light"
+          enableSystem={false}
           disableTransitionOnChange
         >
           <LenisProvider>
-            <CustomCursor />
             {children}
           </LenisProvider>
         </ThemeProvider>

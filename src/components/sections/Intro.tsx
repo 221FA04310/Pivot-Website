@@ -4,14 +4,27 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 
 interface IntroProps {
+  onStartFade?: () => void;
   onComplete?: () => void;
 }
 
-export function Intro({ onComplete }: IntroProps) {
+export function Intro({ onStartFade, onComplete }: IntroProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
+  const blackOverlayRef = useRef<HTMLDivElement>(null);
+  const sentenceWrapperRef = useRef<HTMLDivElement>(null);
+
+  const onStartFadeRef = useRef(onStartFade);
+  const onCompleteRef = useRef(onComplete);
+  const tlRef = useRef<gsap.core.Timeline | null>(null);
+
+  // Sync callbacks with refs to avoid timeline rebuilds when callbacks change
+  useEffect(() => {
+    onStartFadeRef.current = onStartFade;
+    onCompleteRef.current = onComplete;
+  }, [onStartFade, onComplete]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -29,29 +42,33 @@ export function Intro({ onComplete }: IntroProps) {
     };
     window.addEventListener("resize", handleResize);
 
-    // Initial ambient dust particles
-    const dustCount = 35;
-    const dustParticles: Array<{
+    // Initialize 50 gold background sparkles that twinkle
+    const particleCount = 50;
+    const particles: Array<{
       x: number;
       y: number;
       size: number;
       vx: number;
       vy: number;
+      baseAlpha: number;
       alpha: number;
+      phase: number;
     }> = [];
 
-    for (let i = 0; i < dustCount; i++) {
-      dustParticles.push({
+    for (let i = 0; i < particleCount; i++) {
+      particles.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        size: Math.random() * 1.2 + 0.4,
-        vx: (Math.random() - 0.5) * 0.15,
-        vy: -Math.random() * 0.3 - 0.05,
-        alpha: Math.random() * 0.4 + 0.1,
+        size: Math.random() * 1.5 + 0.5,
+        vx: (Math.random() - 0.5) * 0.05,
+        vy: -Math.random() * 0.12 - 0.03,
+        baseAlpha: Math.random() * 0.25 + 0.1,
+        alpha: 0,
+        phase: Math.random() * Math.PI * 2,
       });
     }
 
-    // Dissolve gold particles list
+    // Gold sparkles list that rises from the letters bounds
     const goldParticles: Array<{
       x: number;
       y: number;
@@ -59,96 +76,233 @@ export function Intro({ onComplete }: IntroProps) {
       vx: number;
       vy: number;
       alpha: number;
-      color: string;
     }> = [];
 
-    let spawnGold = false;
+    // Interactive Golden Cursor Particles
+    interface CursorParticle {
+      x: number;
+      y: number;
+      size: number;
+      targetSize: number;
+      vx: number;
+      vy: number;
+      color: string;
+      alpha: number;
+      maxLife: number;
+      life: number;
+    }
+    const cursorParticles: CursorParticle[] = [];
 
-    // Moving ambient light coordinates
-    const light = {
-      x: width / 2,
-      y: height / 2,
-      targetX: width / 2,
-      targetY: height / 2,
-      radius: Math.min(width, height) * 0.7,
+    let lastX = 0;
+    let lastY = 0;
+
+    // Cache elements for quick distance updates on mousemove
+    let cachedLetters: HTMLElement[] = [];
+    const refreshLettersCache = () => {
+      cachedLetters = Array.from(document.querySelectorAll(".intro-letter, .s1-letter, .s2-letter")) as HTMLElement[];
     };
 
-    const render = () => {
-      ctx.fillStyle = "#141414";
-      ctx.fillRect(0, 0, width, height);
+    const handleMouseMove = (e: MouseEvent) => {
+      const x = e.clientX;
+      const y = e.clientY;
 
-      // 1. Moving ambient light overlay
-      light.x += (light.targetX - light.x) * 0.03;
-      light.y += (light.targetY - light.y) * 0.03;
-      const grad = ctx.createRadialGradient(light.x, light.y, 0, light.x, light.y, light.radius);
-      grad.addColorStop(0, "rgba(201, 107, 74, 0.05)"); // Terracotta glow
-      grad.addColorStop(0.5, "rgba(111, 78, 139, 0.015)"); // Plum soft tone
-      grad.addColorStop(1, "rgba(0, 0, 0, 0)");
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, width, height);
-
-      // 2. Subtle film grain overlay
-      ctx.fillStyle = "rgba(255, 255, 255, 0.008)";
-      for (let i = 0; i < 800; i++) {
-        const rx = Math.random() * width;
-        const ry = Math.random() * height;
-        ctx.fillRect(rx, ry, 1, 1);
+      // 1. Spawning interactive gold cursor particles
+      const dist = Math.hypot(x - lastX, y - lastY);
+      if (dist > 5) { // Spawn every 5px of mouse movement
+        const count = Math.floor(Math.random() * 4) + 3; // 3 to 6 particles
+        for (let i = 0; i < count; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const speed = Math.random() * 0.45 + 0.2;
+          const size = Math.random() * 3 + 2; // 2px to 5px
+          const targetSize = size * (Math.random() * 0.35 + 1.15); // Expand slightly
+          const color = Math.random() > 0.45 ? "#D6B26E" : "#F2E2A4";
+          const maxLife = Math.random() * 24 + 48; // 0.8s to 1.2s at 60fps (48 to 72 frames)
+          cursorParticles.push({
+            x: x + (Math.random() - 0.5) * 8,
+            y: y + (Math.random() - 0.5) * 8,
+            size,
+            targetSize,
+            vx: Math.cos(angle) * speed * 0.4,
+            vy: -Math.random() * 0.6 - 0.3, // float upward naturally
+            color,
+            alpha: 0,
+            maxLife,
+            life: maxLife
+          });
+        }
+        lastX = x;
+        lastY = y;
       }
 
-      // 3. Floating dust particles
-      dustParticles.forEach((p) => {
+      // 2. Interactive golden shimmer text reaction on hover approach
+      if (cachedLetters.length === 0) {
+        refreshLettersCache();
+      }
+
+      const threshold = 90;
+      cachedLetters.forEach((el) => {
+        const opacityStr = window.getComputedStyle(el).opacity;
+        const opacity = parseFloat(opacityStr || "0");
+        if (opacity < 0.1) return;
+
+        const rect = el.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const distance = Math.hypot(x - centerX, y - centerY);
+
+        if (distance < threshold) {
+          const isGlowing = el.dataset.glowing === "true";
+          if (!isGlowing) {
+            el.dataset.glowing = "true";
+            gsap.killTweensOf(el, { color: true, textShadow: true });
+            
+            // Subtle golden shimmer glow
+            gsap.fromTo(el, 
+              { 
+                color: "#FFF8EB",
+                textShadow: "0 0 15px rgba(214, 178, 110, 0.95), 0 0 30px rgba(214, 178, 110, 0.7)"
+              },
+              {
+                color: "", // Restores standard CSS default color
+                textShadow: "none",
+                duration: 0.4,
+                ease: "power2.out",
+                onComplete: () => {
+                  el.dataset.glowing = "false";
+                }
+              }
+            );
+          }
+        }
+      });
+    };
+
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener("mousemove", handleMouseMove);
+    }
+
+    let spawnGold = false;
+    let time = 0;
+
+    const render = () => {
+      time += 0.002;
+
+      // Base background radial gradient circle at top
+      const bgGrad = ctx.createRadialGradient(width / 2, 0, 0, width / 2, 0, Math.max(width, height));
+      bgGrad.addColorStop(0, "#243247");
+      bgGrad.addColorStop(0.45, "#1A2333");
+      bgGrad.addColorStop(1, "#151D2B");
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, width, height);
+
+      // Subtle warm-gold ambient light drifting slowly
+      const gx1 = width / 2 + Math.sin(time * 1.4) * (width * 0.15);
+      const gy1 = height / 2 + Math.cos(time * 1.1) * (height * 0.1);
+      const gRadius1 = Math.min(width, height) * 0.65;
+      const grad1 = ctx.createRadialGradient(gx1, gy1, 0, gx1, gy1, gRadius1);
+      grad1.addColorStop(0, "rgba(214, 178, 110, 0.035)");
+      grad1.addColorStop(0.5, "rgba(214, 178, 110, 0.01)");
+      grad1.addColorStop(1, "rgba(0, 0, 0, 0)");
+      ctx.fillStyle = grad1;
+      ctx.fillRect(0, 0, width, height);
+
+      // Subtle plum/indigo ambient light drifting slowly
+      const gx2 = width / 2 + Math.cos(time * 1.0) * (width * 0.2);
+      const gy2 = height / 2 + Math.sin(time * 1.3) * (height * 0.15);
+      const gRadius2 = Math.min(width, height) * 0.75;
+      const grad2 = ctx.createRadialGradient(gx2, gy2, 0, gx2, gy2, gRadius2);
+      grad2.addColorStop(0, "rgba(169, 106, 77, 0.025)");
+      grad2.addColorStop(0.5, "rgba(169, 106, 77, 0.008)");
+      grad2.addColorStop(1, "rgba(0, 0, 0, 0)");
+      ctx.fillStyle = grad2;
+      ctx.fillRect(0, 0, width, height);
+
+      // Draw and update twinkling background gold sparkles
+      particles.forEach((p) => {
         p.x += p.vx;
         p.y += p.vy;
 
+        p.alpha = p.baseAlpha + Math.sin(time * 12 + p.phase) * (p.baseAlpha * 0.4);
+
         if (p.x < 0) p.x = width;
         if (p.x > width) p.x = 0;
-        if (p.y < 0) p.y = height;
+        if (p.y < 0) {
+          p.y = height;
+          p.x = Math.random() * width;
+        }
 
-        ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
+        ctx.fillStyle = `rgba(214, 178, 110, ${p.alpha * 0.25})`;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fill();
       });
 
-      // 4. Gold particles dissolving from letters
+      // Draw and update cursor interactive particles
+      for (let i = cursorParticles.length - 1; i >= 0; i--) {
+        const p = cursorParticles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life--;
+
+        const ratio = p.life / p.maxLife; // 1 -> 0
+        if (ratio > 0.85) {
+          p.alpha = (1 - ratio) / 0.15;
+        } else {
+          p.alpha = ratio / 0.85;
+        }
+
+        const currentSize = p.size + (p.targetSize - p.size) * (1 - ratio);
+
+        if (p.life <= 0) {
+          cursorParticles.splice(i, 1);
+          continue;
+        }
+
+        ctx.shadowColor = "rgba(214, 178, 110, 0.35)";
+        ctx.shadowBlur = 4;
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.alpha;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, currentSize, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1.0;
+      ctx.shadowBlur = 0; // reset shadows
+
+      // Spawn gold sparkles around the letters of the logo bounds
       if (spawnGold && titleRef.current) {
         const rect = titleRef.current.getBoundingClientRect();
-        if (goldParticles.length < 120 && rect.width > 0) {
-          // Spawn a couple particles per frame near the text bounds
-          goldParticles.push({
-            x: rect.left + Math.random() * rect.width,
-            y: rect.top + Math.random() * rect.height,
-            size: Math.random() * 1.5 + 0.5,
-            vx: (Math.random() - 0.5) * 0.5,
-            vy: -Math.random() * 1.0 - 0.3,
-            alpha: 1.0,
-            color: Math.random() > 0.45 ? "#C8A54A" : "#C96B4A", // Muted Gold / Terracotta
-          });
+        if (goldParticles.length < 150 && rect.width > 0) {
+          for (let k = 0; k < 2; k++) {
+            goldParticles.push({
+              x: rect.left + Math.random() * rect.width,
+              y: rect.top + Math.random() * rect.height,
+              size: Math.random() * 2.5 + 0.6, // slightly larger sparkles
+              vx: (Math.random() - 0.5) * 0.4,
+              vy: -Math.random() * 0.8 - 0.25, // floating upwards
+              alpha: Math.random() * 0.25, // Max particle alpha 0.25
+            });
+          }
         }
       }
 
+      // Draw and update gold sparkles
       for (let i = goldParticles.length - 1; i >= 0; i--) {
         const p = goldParticles[i];
         p.x += p.vx;
         p.y += p.vy;
-        p.alpha -= 0.015;
+        p.alpha -= 0.005;
 
         if (p.alpha <= 0) {
           goldParticles.splice(i, 1);
           continue;
         }
 
-        const colorStr = p.color === "#C8A54A" ? "200, 165, 74" : "201, 107, 74";
-        ctx.fillStyle = `rgba(${colorStr}, ${p.alpha})`;
+        ctx.fillStyle = `rgba(214, 178, 110, ${p.alpha})`;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fill();
-      }
-
-      // Slowly shift ambient light center
-      if (Math.random() < 0.008) {
-        light.targetX = width / 2 + (Math.random() - 0.5) * 150;
-        light.targetY = height / 2 + (Math.random() - 0.5) * 150;
       }
 
       animationFrameId = requestAnimationFrame(render);
@@ -156,137 +310,256 @@ export function Intro({ onComplete }: IntroProps) {
 
     render();
 
-    // GSAP Sequence Timeline
+    // GSAP Timeline setup
     const letters = document.querySelectorAll(".intro-letter");
-    gsap.set(letters, { opacity: 0, y: 12 });
+    const s1Letters = document.querySelectorAll(".s1-letter");
+    const s2Letters = document.querySelectorAll(".s2-letter");
 
-    const tl = gsap.timeline({
-      onComplete: () => {
-        if (onComplete) onComplete();
-      }
-    });
+    gsap.set(letters, { opacity: 0, x: -120 });
+    gsap.set(s1Letters, { opacity: 0, x: -120 });
+    gsap.set(s2Letters, { opacity: 0, x: -120 });
+    gsap.set(titleRef.current, { scale: 1, opacity: 1 });
+    gsap.set(sentenceWrapperRef.current, { opacity: 1 });
 
-    // 0.2s - 1.4s: Staggered letter reveal
-    tl.to(letters, {
-      opacity: 1,
-      y: 0,
+    const tl = gsap.timeline();
+    tlRef.current = tl;
+
+    // STAGE 1: Background fades in from black (0.8s)
+    tl.to(blackOverlayRef.current, {
+      opacity: 0,
       duration: 0.8,
-      stagger: 0.3, // corresponding to 0.2, 0.5, 0.8, 1.1, 1.4 offsets
-      ease: "power2.out",
-    }, 0.2);
-
-    // 2.0s: Light sweep begins
-    tl.to(titleRef.current, {
-      backgroundPosition: "0% 0%",
-      duration: 1.0,
       ease: "power2.inOut",
-    }, 2.0);
+    }, 0);
 
-    // 2.5s: Gold dissolve begins
+    // Start spawning gold sparkles when letters start appearing (0.8s)
     tl.call(() => {
       spawnGold = true;
-    }, [], 2.5);
+    }, [], 0.8);
 
-    // 2.8s: Camera moves slightly forward (3% zoom)
-    tl.to(wrapperRef.current, {
-      scale: 1.03,
-      duration: 1.4,
-      ease: "power1.inOut",
-    }, 2.8);
+    // Stagger slide in PIVOT letters from LEFT (duration 0.4s, stagger 0.15s)
+    tl.to(letters, {
+      opacity: 1,
+      x: 0,
+      duration: 0.4,
+      stagger: 0.15,
+      ease: "power3.out",
+    }, 0.8);
 
-    // 3.0s: Shrink and move typography to upper-left (FLIP transition)
+    // Glowing Light Sweep starts at 1.9s (duration 0.4s, stagger 0.15s)
+    tl.to(letters, {
+      color: "#FFF8EB",
+      textShadow: "0 0 25px rgba(214, 178, 110, 0.95), 0 0 45px rgba(214, 178, 110, 0.6)",
+      duration: 0.40,
+      stagger: 0.15,
+      ease: "power1.out",
+    }, 1.9);
+
+    tl.to(letters, {
+      color: "#FFFFFF",
+      textShadow: "0 0 0px rgba(214, 178, 110, 0)",
+      duration: 0.40,
+      stagger: 0.15,
+      ease: "power1.in",
+    }, 2.2);
+
+    // EXIT PIVOT: slowly fade away (opacity 1 -> 0, scale 1 -> 0.98, duration 1.0s, start at 4.4s)
+    tl.to(titleRef.current, {
+      opacity: 0,
+      scale: 0.98,
+      duration: 1.0,
+      ease: "power2.inOut",
+    }, 4.4);
+
+    // STAGE 2: Sentence One letter stagger slide-in starts at 5.4s (duration 0.75s, stagger 0.03s)
+    tl.to(s1Letters, {
+      opacity: 1,
+      x: 0,
+      duration: 0.75,
+      stagger: 0.03,
+      ease: "power3.out",
+    }, 5.4);
+
+    // Glowing Light Sweep on Sentence One letters starts at 7.0s (duration 0.55s, stagger 0.03s)
+    tl.to(s1Letters, {
+      color: "#FFF8EB",
+      textShadow: "0 0 25px rgba(214, 178, 110, 0.95), 0 0 45px rgba(214, 178, 110, 0.6)",
+      duration: 0.55,
+      stagger: 0.03,
+      ease: "power1.out",
+    }, 7.0);
+
+    tl.to(s1Letters, {
+      color: "#F8F6F2",
+      textShadow: "0 0 0px rgba(214, 178, 110, 0)",
+      duration: 0.55,
+      stagger: 0.03,
+      ease: "power1.in",
+    }, 7.3);
+
+    // STAGE 3: Sentence Two letter stagger slide-in starts at 9.6s (duration 0.75s, stagger 0.03s)
+    tl.to(s2Letters, {
+      opacity: 1,
+      x: 0,
+      duration: 0.75,
+      stagger: 0.03,
+      ease: "power3.out",
+    }, 9.6);
+
+    // Glowing Light Sweep on Sentence Two letters starts at 11.4s (duration 0.55s, stagger 0.03s)
+    tl.to(s2Letters, {
+      color: "#FFF8EB",
+      textShadow: "0 0 25px rgba(214, 178, 110, 0.95), 0 0 45px rgba(214, 178, 110, 0.6)",
+      duration: 0.55,
+      stagger: 0.03,
+      ease: "power1.out",
+    }, 11.4);
+
+    tl.to(s2Letters, {
+      color: "#F8F6F2",
+      textShadow: "0 0 0px rgba(214, 178, 110, 0)",
+      duration: 0.55,
+      stagger: 0.03,
+      ease: "power1.in",
+    }, 11.7);
+
+    // Stop gold sparkles spawning at the transition start (15.0s)
     tl.call(() => {
-      const titleEl = titleRef.current;
-      const navLogo = document.getElementById("navbar-logo");
+      spawnGold = false;
+    }, [], 15.0);
 
-      if (titleEl && navLogo) {
-        spawnGold = false; // Halt gold dissolution
+    // TRANSITION: Fade out everything together (starts at 15.0s, duration 0.75s)
+    tl.to(sentenceWrapperRef.current, {
+      opacity: 0,
+      duration: 0.75,
+      ease: "power2.inOut",
+    }, 15.0);
 
-        const titleRect = titleEl.getBoundingClientRect();
-        const navRect = navLogo.getBoundingClientRect();
+    tl.to(containerRef.current, {
+      opacity: 0,
+      duration: 0.75,
+      ease: "power2.inOut",
+    }, 15.0);
 
-        // Calculate scaling
-        const scaleX = navRect.width / titleRect.width;
-        const scaleY = navRect.height / titleRect.height;
-        const scale = (scaleX + scaleY) / 2;
+    // Prevent blocking clicks on components underneath
+    tl.set(containerRef.current, { pointerEvents: "none" }, 15.0);
 
-        // Calculate coordinate offsets from screen center to top-left Navbar logo target
-        const titleCenterX = titleRect.left + titleRect.width / 2;
-        const titleCenterY = titleRect.top + titleRect.height / 2;
-        const navCenterX = navRect.left + navRect.width / 2;
-        const navCenterY = navRect.top + navRect.height / 2;
+    // Call onStartFade to trigger homepage fade-in (15.9s - 0.75s fade-out + 0.15s wait)
+    tl.call(() => {
+      if (onStartFadeRef.current) onStartFadeRef.current();
+      window.dispatchEvent(new Event("pivot-intro-start-play"));
+    }, [], 15.9);
 
-        const deltaX = navCenterX - titleCenterX;
-        const deltaY = navCenterY - titleCenterY;
-
-        // 3.0s - 3.2s: scale down & slide to Navbar logo
-        gsap.to(titleEl, {
-          x: deltaX,
-          y: deltaY,
-          scale: scale,
-          duration: 1.0,
-          ease: "power4.inOut",
-        });
-
-        // Easing colors to match text-foreground (warm dark)
-        gsap.to(letters, {
-          color: "var(--foreground)",
-          duration: 1.0,
-          ease: "power4.inOut"
-        });
-
-        // 3.2s - 3.6s: transition intro background overlay opacity out
-        gsap.to(containerRef.current, {
-          backgroundColor: "rgba(247, 244, 238, 0)",
-          opacity: 0,
-          duration: 1.0,
-          ease: "power3.inOut",
-          delay: 0.2
-        });
-      }
-    }, [], 3.0);
+    // Call onComplete to unmount the preloader (16.9s)
+    tl.call(() => {
+      if (onCompleteRef.current) onCompleteRef.current();
+    }, [], 16.9);
 
     return () => {
       window.removeEventListener("resize", handleResize);
+      if (container) {
+        container.removeEventListener("mousemove", handleMouseMove);
+      }
       cancelAnimationFrame(animationFrameId);
       ctx.clearRect(0, 0, width, height);
-      tl.kill();
+      cursorParticles.length = 0;
+      cachedLetters.length = 0;
+      if (tlRef.current) {
+        tlRef.current.kill();
+      }
     };
-  }, [onComplete]);
+  }, []);
+
+  const renderAnimatedSentence = (text: string, letterClass: string) => {
+    return text.split("\n").map((line, lineIdx) => (
+      <div key={lineIdx} className="flex flex-wrap justify-center w-full leading-[1.2]">
+        {line.split(" ").map((word, wordIdx) => (
+          <span key={wordIdx} className="inline-block whitespace-nowrap mx-[0.15em]">
+            {word.split("").map((char, charIdx) => (
+              <span key={charIdx} className={`${letterClass} inline-block opacity-0`} style={{ transition: "none" }}>
+                {char}
+              </span>
+            ))}
+          </span>
+        ))}
+      </div>
+    ));
+  };
 
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-[99999] bg-[#141414] select-none overflow-hidden"
+      className="fixed inset-0 z-[99999] bg-[#151D2B] bg-noise select-none overflow-hidden"
+      style={{
+        background: "radial-gradient(circle at top, #243247 0%, #1A2333 45%, #151D2B 100%)"
+      }}
     >
-      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" />
+      {/* Graphite overlay to fade out during Stage 1 */}
+      <div 
+        ref={blackOverlayRef} 
+        className="absolute inset-0 bg-[#151D2B] z-20 pointer-events-none" 
+      />
+
+      <canvas 
+        ref={canvasRef} 
+        className="absolute inset-0 w-full h-full pointer-events-none z-0" 
+      />
       
       <div 
         ref={wrapperRef}
-        className="w-full h-full flex items-center justify-center relative z-10"
+        className="w-full h-full flex flex-col items-center justify-center relative z-10"
         style={{ transformOrigin: "center center" }}
       >
+        {/* Phase 1: PIVOT Logo */}
         <div
           ref={titleRef}
           id="intro-title"
-          className="flex font-heading font-extrabold text-[64px] sm:text-[100px] md:text-[140px] uppercase text-white tracking-[4px] select-none relative z-10 leading-none"
+          className="flex font-heading font-black uppercase select-none leading-none text-[72px] md:text-[120px] lg:text-[clamp(160px,18vw,340px)] text-white absolute"
           style={{
-            background: "linear-gradient(90deg, #FFFFFF 0%, #FFFFFF 35%, #C8A54A 50%, #FFFFFF 65%, #FFFFFF 100%)",
-            backgroundSize: "200% auto",
-            backgroundPosition: "200% 0%",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
+            letterSpacing: "normal",
             transformOrigin: "center center",
+            width: "80%",
+            justifyContent: "center",
           }}
         >
-          <span className="intro-letter inline-block">P</span>
-          <span className="intro-letter inline-block">I</span>
-          <span className="intro-letter inline-block">V</span>
-          <span className="intro-letter inline-block">O</span>
-          <span className="intro-letter inline-block">T</span>
+          <span className="intro-letter inline-block opacity-0">P</span>
+          <span className="intro-letter inline-block opacity-0">I</span>
+          <span className="intro-letter inline-block opacity-0">V</span>
+          <span className="intro-letter inline-block opacity-0">O</span>
+          <span className="intro-letter inline-block opacity-0">T</span>
+        </div>
+
+        {/* Phase 2: Sentences */}
+        <div
+          ref={sentenceWrapperRef}
+          className="flex flex-col items-center justify-center text-center w-[90%] md:w-[60%] lg:w-[50%] max-w-[900px] absolute z-10"
+        >
+          {/* Sentence One */}
+          <div
+            id="sentence-one"
+            className="font-heading font-extrabold text-[#F8F6F2] text-[30px] md:text-[46px] lg:text-[clamp(52px,4.8vw,72px)] tracking-[-0.5px] text-center"
+            style={{
+              lineHeight: "1.2",
+              width: "100%",
+            }}
+          >
+            {renderAnimatedSentence("Vision begins with an idea.", "s1-letter")}
+          </div>
+
+          {/* Sentence Two */}
+          <div
+            id="sentence-two"
+            className="font-heading font-extrabold text-[#F8F6F2] text-[30px] md:text-[46px] lg:text-[clamp(52px,4.8vw,72px)] tracking-[-0.5px] text-center mt-[18px]"
+            style={{
+              lineHeight: "1.2",
+              width: "100%",
+            }}
+          >
+            {renderAnimatedSentence("Impact is built through execution.", "s2-letter")}
+          </div>
         </div>
       </div>
     </div>
   );
 }
+
 export default Intro;

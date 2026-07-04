@@ -21,16 +21,16 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         transition={{ duration: 0.3, ease: [0.25, 1, 0.5, 1] }} // smooth, non-bouncy easing
         className={cn(
           "relative h-[58px] px-7 rounded-premium font-semibold text-sm sm:text-base tracking-wide flex items-center justify-center gap-3 transition-colors duration-300 outline-none cursor-pointer border",
-          // Primary Variant: Terracotta background, White text
+          // Primary Variant: Bronze background, White text
           variant === "primary" && 
-            "bg-accent-terracotta text-white border-transparent hover:bg-opacity-95 shadow-sm",
-          // Secondary Variant: Transparent background, Dark border
+            "bg-[#A96A4D] hover:bg-[#BC7A55] text-white border-transparent shadow-[0_10px_25px_rgba(169,106,77,0.25)]",
+          // Secondary Variant: Transparent background, Bronze border, Charcoal text
           variant === "secondary" && 
-            "bg-transparent border-foreground/30 text-foreground hover:border-foreground hover:bg-foreground/5",
+            "bg-transparent border-[#A96A4D] text-[#1B2430] hover:bg-[#A96A4D] hover:text-white hover:border-[#A96A4D]",
           className
         )}
         style={{
-          "--box-shadow-hover": "0 10px 25px -10px var(--accent-terracotta)",
+          "--box-shadow-hover": "0 15px 30px rgba(169, 106, 77, 0.35)",
         } as React.CSSProperties}
         {...props}
       >

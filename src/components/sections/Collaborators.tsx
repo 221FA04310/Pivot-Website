@@ -230,7 +230,7 @@ export function Collaborators() {
   return (
     <section
       ref={containerRef}
-      className="w-full relative min-h-screen flex flex-col justify-center py-[120px] px-6 sm:px-12 md:px-20 bg-[#F7F4EE] border-t border-border/40 select-none overflow-hidden"
+      className="w-full relative min-h-screen flex flex-col justify-center py-[120px] px-6 sm:px-12 md:px-20 bg-[#FCFAF6] border-t border-border/40 select-none overflow-hidden"
     >
       {/* 1. Volumetric lighting and floating dust */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden opacity-30">
@@ -245,11 +245,11 @@ export function Collaborators() {
           ref={introRef}
           className="max-w-[700px] mx-auto text-center flex flex-col items-center gap-4"
         >
-          <span className="text-xs uppercase tracking-widest text-accent-terracotta font-bold">
+          <span className="text-xs uppercase tracking-widest text-[#A96A4D] font-bold">
             COLLABORATORS
           </span>
-          <H2 className="uppercase text-foreground/95">Trusted by Visionaries Around the World</H2>
-          <Body className="text-foreground/75 leading-relaxed text-sm sm:text-base">
+          <H2 className="uppercase text-[#1B2430]">Trusted by Visionaries Around the World</H2>
+          <Body className="text-[#5B6575] leading-relaxed text-sm sm:text-base">
             We partner with startups, enterprises and growing businesses to design, build and scale exceptional digital products.
           </Body>
         </div>
@@ -266,8 +266,8 @@ export function Collaborators() {
               <div
                 key={`${card.id}-${idx}`}
                 className={cn(
-                  "w-[280px] h-[370px] rounded-[24px] bg-[#FCFBF8]/60 border border-border/40 shadow-premium flex flex-col justify-between p-6 transition-all duration-500 ease-out shrink-0 group cursor-pointer",
-                  "hover:-translate-y-1.5 hover:shadow-2xl hover:bg-[#FCFBF8]/90 hover:border-accent-terracotta/40 hover:scale-[1.03]"
+                  "w-[280px] h-[370px] rounded-[24px] bg-white/72 backdrop-blur-[18px] border border-white/45 shadow-[0_20px_60px_rgba(0,0,0,0.08)] flex flex-col justify-between p-6 transition-all duration-500 ease-out shrink-0 group cursor-pointer",
+                  "hover:-translate-y-1.5 hover:shadow-2xl hover:bg-white/90 hover:border-[#D6B26E] hover:scale-[1.03]"
                 )}
               >
                 {/* Large Cover Image with Hover Zoom */}
@@ -277,17 +277,17 @@ export function Collaborators() {
                     alt={card.name} 
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 group-hover:brightness-105" 
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#FCFBF8]/60 via-transparent to-transparent opacity-85" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-white/60 via-transparent to-transparent opacity-85" />
                 </div>
                 
                 {/* Content Details (Always fully visible) */}
                 <div className="flex-1 flex flex-col justify-between pt-4 text-left">
                   <div className="space-y-1.5">
-                    <span className="inline-block px-2.5 py-1 rounded-full bg-[#C96B4A] text-[9px] font-bold text-white uppercase tracking-wider">
+                    <span className="inline-block px-2.5 py-1 rounded-full bg-[#A96A4D] text-[9px] font-bold text-white uppercase tracking-wider">
                       {card.type}
                     </span>
-                    <H3 className="text-[#1A1A1A] text-lg font-bold tracking-tight mt-1">{card.name}</H3>
-                    <p className="text-[10px] text-foreground/60 leading-relaxed font-sans mt-1">
+                    <H3 className="text-[#1B2430] text-lg font-bold tracking-tight mt-1">{card.name}</H3>
+                    <p className="text-[10px] text-[#5B6575] leading-relaxed font-sans mt-1">
                       {card.desc}
                     </p>
                   </div>
@@ -316,7 +316,7 @@ export function Collaborators() {
           ].map((stat, idx) => (
             <div 
               key={idx}
-              className="glassmorphism rounded-2xl border border-border/30 bg-[#FCFBF8]/40 shadow-premium p-6 flex flex-col items-center justify-center gap-2 select-text w-full"
+              className="glassmorphism rounded-2xl border border-border/30 bg-cardBg/40 shadow-premium p-6 flex flex-col items-center justify-center gap-2 select-text w-full"
             >
               <span 
                 className="stat-val font-heading font-extrabold text-3xl text-accent-terracotta leading-none"
@@ -345,7 +345,7 @@ export function Collaborators() {
                 <div 
                   key={`${logo.name}-${lIdx}`}
                   className={cn(
-                    "px-8 py-3 rounded-xl border border-border/40 bg-[#FCFBF8]/40 backdrop-blur-md text-foreground/45 transition-all duration-300 font-heading font-extrabold uppercase tracking-widest text-[11px] select-none cursor-pointer",
+                    "px-8 py-3 rounded-xl border border-border/40 bg-cardBg/40 backdrop-blur-md text-foreground/45 transition-all duration-300 font-heading font-extrabold uppercase tracking-widest text-[11px] select-none cursor-pointer",
                     logo.color
                   )}
                 >

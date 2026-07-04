@@ -68,20 +68,24 @@ export function Footer() {
       targetX: width / 2,
       targetY: height / 2,
       radius: Math.min(width, height) * 0.75,
-      color: "rgba(201, 107, 74, 0.025)"
+      color: "rgba(214, 178, 110, 0.04)"
     };
 
     let animationFrameId: number;
 
     const render = () => {
-      ctx.fillStyle = "#141414";
+      const bgGrad = ctx.createLinearGradient(0, 0, 0, height);
+      bgGrad.addColorStop(0, "#1C2738");
+      bgGrad.addColorStop(0.4, "#182131");
+      bgGrad.addColorStop(1, "#151D2B");
+      ctx.fillStyle = bgGrad;
       ctx.fillRect(0, 0, width, height);
 
       light.x += (light.targetX - light.x) * 0.015;
       light.y += (light.targetY - light.y) * 0.015;
       const grad = ctx.createRadialGradient(light.x, light.y, 0, light.x, light.y, light.radius);
       grad.addColorStop(0, light.color);
-      grad.addColorStop(0.5, "rgba(111, 78, 139, 0.008)");
+      grad.addColorStop(0.5, "rgba(169, 106, 77, 0.01)");
       grad.addColorStop(1, "rgba(0, 0, 0, 0)");
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, width, height);
@@ -99,7 +103,7 @@ export function Footer() {
         if (p.x > width) p.x = 0;
         if (p.y < 0) p.y = height;
 
-        ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
+        ctx.fillStyle = `rgba(214, 178, 110, ${p.alpha})`;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fill();
@@ -119,7 +123,7 @@ export function Footer() {
       scrollTrigger: {
         trigger: containerRef.current,
         start: "top 65%",
-        toggleActions: "play none none none"
+        toggleActions: "play reset play reset"
       }
     });
 
@@ -257,16 +261,16 @@ export function Footer() {
               <Button 
                 variant="primary" 
                 magnetic={true} 
-                className="h-[60px] px-8 rounded-[20px] text-sm uppercase tracking-wider shadow-lg"
+                className="h-[60px] px-8 rounded-[20px] text-sm uppercase tracking-wider shadow-lg bg-[#A96A4D] hover:bg-[#C58B64] border-transparent text-white"
               >
                 Start Your Project
               </Button>
             </div>
-            <div ref={btn2Ref}>
+             <div ref={btn2Ref}>
               <Button 
                 variant="secondary" 
                 magnetic={true} 
-                className="h-[60px] px-8 rounded-[20px] text-sm uppercase tracking-wider border border-white/20 bg-transparent text-white hover:bg-white/5"
+                className="h-[60px] px-8 rounded-[20px] text-sm uppercase tracking-wider border border-[#A96A4D] bg-transparent text-white hover:bg-[#C58B64] hover:border-[#C58B64]"
               >
                 Book Discovery Call
               </Button>
@@ -274,33 +278,36 @@ export function Footer() {
           </div>
         </div>
       </div>
-
+ 
       <div 
         ref={footerLinksRef}
-        className="w-full bg-[#141414] border-t border-white/10 py-16 px-6 sm:px-12 md:px-16 relative z-10 pointer-events-auto"
+        className="w-full border-t border-white/10 py-16 px-6 sm:px-12 md:px-16 relative z-10 pointer-events-auto"
+        style={{
+          background: "linear-gradient(180deg, #1C2738 0%, #182131 40%, #151D2B 100%)"
+        }}
       >
         <div className="max-w-[1400px] mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-12 gap-12 pb-16">
           <div className="md:col-span-5 space-y-6 text-left">
             <Link href="/" className="text-3xl font-heading font-extrabold tracking-widest text-white">
-              PIVOT<span className="text-accent-terracotta">.</span>
+              PIVOT<span className="text-[#A96A4D]">.</span>
             </Link>
-            <p className="text-white/60 text-sm leading-relaxed max-w-sm">
+            <p className="text-white/75 text-sm leading-relaxed max-w-sm">
               Transforming ideas into meaningful digital experiences through elite engineering and custom visual interfaces.
             </p>
           </div>
-
+ 
           <div className="md:col-span-2 space-y-4 text-left">
-            <h4 className="text-xs uppercase tracking-wider text-accent-terracotta font-bold">Company</h4>
+            <h4 className="text-xs uppercase tracking-wider text-white font-bold">Company</h4>
             <ul className="space-y-2 text-xs font-semibold uppercase tracking-wider">
-              <li><Link href="/" className="text-white/70 hover:text-white transition-colors duration-200">About</Link></li>
-              <li><Link href="/services" className="text-white/70 hover:text-white transition-colors duration-200">Services</Link></li>
-              <li><Link href="/projects" className="text-white/70 hover:text-white transition-colors duration-200">Projects</Link></li>
+              <li><Link href="/" className="text-[#D6B26E]/80 hover:text-white transition-colors duration-200">About</Link></li>
+              <li><Link href="/services" className="text-[#D6B26E]/80 hover:text-white transition-colors duration-200">Services</Link></li>
+              <li><Link href="/projects" className="text-[#D6B26E]/80 hover:text-white transition-colors duration-200">Projects</Link></li>
               <li><span className="text-white/40 cursor-not-allowed">Careers</span></li>
             </ul>
           </div>
-
+ 
           <div className="md:col-span-2 space-y-4 text-left">
-            <h4 className="text-xs uppercase tracking-wider text-accent-mutedGold font-bold">Resources</h4>
+            <h4 className="text-xs uppercase tracking-wider text-white font-bold">Resources</h4>
             <ul className="space-y-2 text-xs font-semibold uppercase tracking-wider">
               <li><span className="text-white/40 cursor-not-allowed">Blog</span></li>
               <li><span className="text-white/40 cursor-not-allowed">Privacy</span></li>
@@ -308,12 +315,12 @@ export function Footer() {
               <li><span className="text-white/40 cursor-not-allowed">FAQ</span></li>
             </ul>
           </div>
-
+ 
           <div className="md:col-span-3 space-y-4 text-left">
-            <h4 className="text-xs uppercase tracking-wider text-accent-terracotta font-bold">Contact</h4>
+            <h4 className="text-xs uppercase tracking-wider text-white font-bold">Contact</h4>
             <ul className="space-y-2 text-xs font-semibold uppercase tracking-wider">
-              <li><span className="text-white/70">hello@pivot.studio</span></li>
-              <li><span className="text-white/70">+1 (555) 0192-384</span></li>
+              <li><span className="text-[#D6B26E]/80">hello@pivot.studio</span></li>
+              <li><span className="text-[#D6B26E]/80">+1 (555) 0192-384</span></li>
               <li className="flex items-center gap-3 pt-3 text-white/50">
                 <a href="#" aria-label="Github Link" className="hover:text-white transition-colors duration-200">
                   <svg className="w-4.5 h-4.5 fill-current" viewBox="0 0 24 24">

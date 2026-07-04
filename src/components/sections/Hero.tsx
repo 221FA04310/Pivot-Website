@@ -38,21 +38,21 @@ export function Hero() {
       heading: "Don't Let a Great Idea Stay Just an Idea.",
       subheading: "Every successful company began with someone taking the first step. Tell us your vision—we'll help turn it into a product.",
       buttonText: "Take the First Step",
-      overlayClass: "from-[#141414]/80 via-[#141414]/55 to-transparent",
+      overlayClass: "from-[#111827]/85 via-[#111827]/55 to-transparent",
     },
     {
       chapter: "Chapter II: The Vision",
       heading: "Turn Your Vision Into a Website People Can't Ignore.",
       subheading: "Your website is often the first impression of your business. We make sure it's one that inspires, earns trust, and drives real results.",
       buttonText: "Bring Life to Your Vision",
-      overlayClass: "from-[#141923]/85 via-[#141923]/55 to-transparent",
+      overlayClass: "from-[#111827]/85 via-[#111827]/55 to-transparent",
     },
     {
       chapter: "Chapter III: The Creation",
       heading: "Your Success Story Could Be the Next One We Tell.",
       subheading: "Every project began with someone who had an idea and a vision. Explore the digital experiences we have created and imagine what we could build together.",
       buttonText: "Explore Our Success Stories",
-      overlayClass: "from-[#19141e]/85 via-[#19141e]/55 to-transparent",
+      overlayClass: "from-[#111827]/85 via-[#111827]/55 to-transparent",
     },
   ];
 
@@ -120,6 +120,37 @@ export function Hero() {
     }
   }, [currentSlide]);
 
+  // Synchronize first Hero video playback with preloader timeline
+  useEffect(() => {
+    const video = videoRefs[0].current;
+    if (!video) return;
+
+    const hasIntroPlayed = typeof window !== "undefined" && !!(window as unknown as { __pivotIntroPlayed?: boolean }).__pivotIntroPlayed;
+
+    if (!hasIntroPlayed) {
+      // Keep paused at start frame initially
+      video.pause();
+      video.currentTime = 0;
+
+      const handlePlay = () => {
+        video.play().catch((err) => {
+          console.warn("Hero video autoplay was interrupted/failed:", err);
+        });
+      };
+
+      window.addEventListener("pivot-intro-start-play", handlePlay);
+      return () => {
+        window.removeEventListener("pivot-intro-start-play", handlePlay);
+      };
+    } else {
+      // Played before, play immediately
+      video.play().catch((err) => {
+        console.warn("Hero video playback failed on navigation:", err);
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Sync scroll positioning to slide Hero elements up organically
   useEffect(() => {
     const container = containerRef.current;
@@ -179,7 +210,7 @@ export function Hero() {
     <section
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      className="h-screen w-full relative overflow-hidden bg-[#141414] select-none"
+      className="h-screen w-full relative overflow-hidden bg-[#111827] select-none"
     >
       {/* 1. GPU-Accelerated Parallax Video Canvas Container */}
       <div
@@ -192,7 +223,7 @@ export function Hero() {
           preload="auto"
           muted
           playsInline
-          autoPlay
+          autoPlay={typeof window !== "undefined" && !!(window as unknown as { __pivotIntroPlayed?: boolean }).__pivotIntroPlayed}
           className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
           style={{ opacity: currentSlide === 0 ? 1 : 0 }}
           onTimeUpdate={() => handleTimeUpdate(0)}
