@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Button } from "../ui/Button";
 import { Magnetic } from "../ui/Magnetic";
 import { Menu, X } from "lucide-react";
@@ -9,6 +10,9 @@ import { cn } from "@/utils/cn";
 
 export function Navbar({ introComplete = true }: { introComplete?: boolean }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const pathname = usePathname();
+  const isHomePage = pathname === "/";
 
   const navItems = [
     { label: "Home", href: "/" },
@@ -29,21 +33,75 @@ export function Navbar({ introComplete = true }: { introComplete?: boolean }) {
     };
   }, [isMobileMenuOpen]);
 
+  // Track scroll position to toggle fixed solid background state
+  useEffect(() => {
+    // If not on the homepage, immediately lock to the solid docked navbar state
+    if (!isHomePage) {
+      setIsScrolled(true);
+      return;
+    }
+
+    const handleScroll = () => {
+      if (window.scrollY > 20) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [isHomePage]);
+
   return (
     <>
-      <nav className="fixed top-0 left-0 w-full z-50 py-6 px-6 sm:px-12 transition-all duration-300">
-        <div className="max-w-[1400px] mx-auto flex items-center justify-between h-20 px-8 rounded-premium glassmorphism border border-border/40 shadow-premium relative z-50">
+      {/* Inject global scroll margins/paddings so scrolled targets align perfectly below the fixed space */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        html {
+          scroll-padding-top: ${isScrolled ? '80px' : '128px'} !important;
+          transition: scroll-padding-top 280ms ease-in-out;
+        }
+        section[id], div[id] {
+          scroll-margin-top: ${isScrolled ? '80px' : '128px'} !important;
+          transition: scroll-margin-top 280ms ease-in-out;
+        }
+      `}} />
+
+      <nav 
+        className={cn(
+          "fixed top-0 left-0 w-full z-50 transition-all duration-[280ms] ease-in-out",
+          isScrolled 
+            ? "py-0 px-0" 
+            : "py-6 px-6 sm:px-12"
+        )}
+      >
+        <div 
+          className={cn(
+            "mx-auto flex items-center justify-between h-20 transition-all duration-[280ms] ease-in-out relative z-50 border bg-[#182234] border-white/10 shadow-lg",
+            isScrolled 
+              ? "w-full max-w-[100%] rounded-none border-t-transparent border-x-transparent px-6 sm:px-12 md:px-16" 
+              : "max-w-[1400px] w-full rounded-premium px-8"
+          )}
+        >
           {/* Editorial Logo */}
           <Magnetic range={40} strength={0.3}>
             <Link 
               href="/" 
               id="navbar-logo"
               className={cn(
-                "text-2xl font-heading font-extrabold tracking-widest text-foreground select-none transition-opacity duration-500",
+                "flex items-center select-none transition-opacity duration-500",
                 !introComplete && "opacity-0 pointer-events-none"
               )}
             >
-              PIVOT<span className="text-accent-terracotta">.</span>
+              <img 
+                src="/logo.png" 
+                alt="PIVOT Logo" 
+                className="h-11 w-auto object-contain" 
+              />
             </Link>
           </Magnetic>
 
@@ -58,7 +116,7 @@ export function Navbar({ introComplete = true }: { introComplete?: boolean }) {
               <Magnetic key={idx} range={30} strength={0.2}>
                 <Link
                   href={item.href}
-                  className="text-sm font-semibold tracking-wider text-foreground/70 hover:text-foreground transition-colors duration-200 uppercase"
+                  className="text-sm font-semibold tracking-wider text-white/70 hover:text-white transition-colors duration-200 uppercase"
                 >
                   {item.label}
                 </Link>
@@ -83,7 +141,7 @@ export function Navbar({ introComplete = true }: { introComplete?: boolean }) {
             {/* Mobile Hamburger Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden flex items-center justify-center w-12 h-12 rounded-full border border-border/40 bg-cardBg/20 hover:bg-cardBg/55 backdrop-blur-md transition-all duration-200 text-foreground cursor-pointer shadow-sm outline-none"
+              className="md:hidden flex items-center justify-center w-12 h-12 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-white transition-all duration-200 cursor-pointer shadow-sm outline-none"
               aria-label="Toggle Menu"
             >
               {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}

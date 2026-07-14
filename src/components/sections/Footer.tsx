@@ -119,78 +119,87 @@ export function Footer() {
 
     render();
 
+    // Initial states: everything is hidden initially
+    gsap.set(stage1Ref.current, { opacity: 0, y: 40 });
+    gsap.set([readyRef.current, buildRef.current], { opacity: 0, y: 40 });
+    gsap.set([btn1Ref.current, btn2Ref.current], { opacity: 0, y: 30 });
+
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: containerRef.current,
-        start: "top 65%",
-        toggleActions: "play reset play reset"
+        start: "top bottom", // when the top of the footer enters the bottom of the viewport
+        end: "bottom bottom",   // when the bottom of the footer is at the bottom of the viewport
+        scrub: 0.6,          // smooth 600ms damping catch-up duration
+        invalidateOnRefresh: true,
       }
     });
 
-    gsap.set(stage1Ref.current, { opacity: 0, y: 40 });
-    gsap.set(readyRef.current, { opacity: 0, scale: 0.96 });
-    gsap.set(buildRef.current, { opacity: 0, y: 20 });
-    gsap.set([btn1Ref.current, btn2Ref.current], { opacity: 0, y: 15 });
-
+    // 1. Sentence fades in as user scrolls into the section
     tl.to(stage1Ref.current, {
       opacity: 1,
       y: 0,
-      duration: 1.0,
+      duration: 0.35,
       ease: "power2.out"
-    }, 0.2);
+    }, 0);
 
+    // Sentence stays visible (hold state) from 0.35 to 0.5
+
+    // 2. Sentence fades out
     tl.to(stage1Ref.current, {
       opacity: 0,
-      y: -20,
-      duration: 1.0,
-      ease: "power2.inOut"
-    }, 3.7);
+      y: -40,
+      duration: 0.15,
+      ease: "power2.in"
+    }, 0.5);
 
+    // 3. Heading elements reveal in sequence after sentence fades out
     tl.to(readyRef.current, {
       opacity: 1,
-      scale: 1,
-      duration: 0.8,
-      ease: "power3.out"
-    }, 4.7);
+      y: 0,
+      duration: 0.2,
+      ease: "power2.out"
+    }, 0.65);
 
     tl.to(buildRef.current, {
       opacity: 1,
       y: 0,
-      duration: 0.8,
-      ease: "power3.out"
-    }, 5.5);
+      duration: 0.2,
+      ease: "power2.out"
+    }, 0.7);
 
+    // Ambient background light shift and particle speed update
     tl.to(light, {
       color: "rgba(201, 107, 74, 0.05)",
-      duration: 1.5,
+      duration: 0.3,
       ease: "power2.inOut"
-    }, 7.0);
+    }, 0.7);
 
     tl.call(() => {
       dustParticles.forEach((p) => {
         p.vy = -Math.random() * 0.8 - 0.2;
       });
-    }, [], 7.0);
+    }, [], 0.75);
 
+    // 4. Subtle wrapper shift and button reveal
     tl.to(textWrapperRef.current, {
       y: -30,
-      duration: 1.0,
-      ease: "power3.inOut"
-    }, 7.5);
+      duration: 0.2,
+      ease: "power2.inOut"
+    }, 0.8);
 
     tl.to(btn1Ref.current, {
       opacity: 1,
       y: 0,
-      duration: 0.6,
-      ease: "power3.out"
-    }, 7.8);
+      duration: 0.15,
+      ease: "power2.out"
+    }, 0.85);
 
     tl.to(btn2Ref.current, {
       opacity: 1,
       y: 0,
-      duration: 0.6,
-      ease: "power3.out"
-    }, 8.0);
+      duration: 0.15,
+      ease: "power2.out"
+    }, 0.9);
 
     gsap.fromTo(footerLinksRef.current,
       { opacity: 0, y: 50 },

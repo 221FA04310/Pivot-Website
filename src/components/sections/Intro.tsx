@@ -14,7 +14,7 @@ export function Intro({ onStartFade, onComplete }: IntroProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
   const blackOverlayRef = useRef<HTMLDivElement>(null);
-  const sentenceWrapperRef = useRef<HTMLDivElement>(null);
+
 
   const onStartFadeRef = useRef(onStartFade);
   const onCompleteRef = useRef(onComplete);
@@ -99,7 +99,7 @@ export function Intro({ onStartFade, onComplete }: IntroProps) {
     // Cache elements for quick distance updates on mousemove
     let cachedLetters: HTMLElement[] = [];
     const refreshLettersCache = () => {
-      cachedLetters = Array.from(document.querySelectorAll(".intro-letter, .s1-letter, .s2-letter")) as HTMLElement[];
+      cachedLetters = Array.from(document.querySelectorAll(".intro-letter")) as HTMLElement[];
     };
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -312,14 +312,9 @@ export function Intro({ onStartFade, onComplete }: IntroProps) {
 
     // GSAP Timeline setup
     const letters = document.querySelectorAll(".intro-letter");
-    const s1Letters = document.querySelectorAll(".s1-letter");
-    const s2Letters = document.querySelectorAll(".s2-letter");
 
     gsap.set(letters, { opacity: 0, x: -120 });
-    gsap.set(s1Letters, { opacity: 0, x: -120 });
-    gsap.set(s2Letters, { opacity: 0, x: -120 });
     gsap.set(titleRef.current, { scale: 1, opacity: 1 });
-    gsap.set(sentenceWrapperRef.current, { opacity: 1 });
 
     const tl = gsap.timeline();
     tlRef.current = tl;
@@ -362,97 +357,39 @@ export function Intro({ onStartFade, onComplete }: IntroProps) {
       ease: "power1.in",
     }, 2.2);
 
-    // EXIT PIVOT: slowly fade away (opacity 1 -> 0, scale 1 -> 0.98, duration 1.0s, start at 4.4s)
+    // Stop gold sparkles spawning at the transition start (4.0s)
+    tl.call(() => {
+      spawnGold = false;
+    }, [], 4.0);
+
+    // EXIT PIVOT: slowly fade away (opacity 1 -> 0, scale 1 -> 0.98, duration 1.0s, start at 4.0s)
     tl.to(titleRef.current, {
       opacity: 0,
       scale: 0.98,
       duration: 1.0,
       ease: "power2.inOut",
-    }, 4.4);
+    }, 4.0);
 
-    // STAGE 2: Sentence One letter stagger slide-in starts at 5.4s (duration 0.75s, stagger 0.03s)
-    tl.to(s1Letters, {
-      opacity: 1,
-      x: 0,
-      duration: 0.75,
-      stagger: 0.03,
-      ease: "power3.out",
-    }, 5.4);
-
-    // Glowing Light Sweep on Sentence One letters starts at 7.0s (duration 0.55s, stagger 0.03s)
-    tl.to(s1Letters, {
-      color: "#FFF8EB",
-      textShadow: "0 0 25px rgba(214, 178, 110, 0.95), 0 0 45px rgba(214, 178, 110, 0.6)",
-      duration: 0.55,
-      stagger: 0.03,
-      ease: "power1.out",
-    }, 7.0);
-
-    tl.to(s1Letters, {
-      color: "#F8F6F2",
-      textShadow: "0 0 0px rgba(214, 178, 110, 0)",
-      duration: 0.55,
-      stagger: 0.03,
-      ease: "power1.in",
-    }, 7.3);
-
-    // STAGE 3: Sentence Two letter stagger slide-in starts at 9.6s (duration 0.75s, stagger 0.03s)
-    tl.to(s2Letters, {
-      opacity: 1,
-      x: 0,
-      duration: 0.75,
-      stagger: 0.03,
-      ease: "power3.out",
-    }, 9.6);
-
-    // Glowing Light Sweep on Sentence Two letters starts at 11.4s (duration 0.55s, stagger 0.03s)
-    tl.to(s2Letters, {
-      color: "#FFF8EB",
-      textShadow: "0 0 25px rgba(214, 178, 110, 0.95), 0 0 45px rgba(214, 178, 110, 0.6)",
-      duration: 0.55,
-      stagger: 0.03,
-      ease: "power1.out",
-    }, 11.4);
-
-    tl.to(s2Letters, {
-      color: "#F8F6F2",
-      textShadow: "0 0 0px rgba(214, 178, 110, 0)",
-      duration: 0.55,
-      stagger: 0.03,
-      ease: "power1.in",
-    }, 11.7);
-
-    // Stop gold sparkles spawning at the transition start (15.0s)
-    tl.call(() => {
-      spawnGold = false;
-    }, [], 15.0);
-
-    // TRANSITION: Fade out everything together (starts at 15.0s, duration 0.75s)
-    tl.to(sentenceWrapperRef.current, {
-      opacity: 0,
-      duration: 0.75,
-      ease: "power2.inOut",
-    }, 15.0);
-
+    // TRANSITION: Fade out the container (starts at 4.0s, duration 0.75s)
     tl.to(containerRef.current, {
       opacity: 0,
       duration: 0.75,
       ease: "power2.inOut",
-    }, 15.0);
+    }, 4.0);
 
     // Prevent blocking clicks on components underneath
-    tl.set(containerRef.current, { pointerEvents: "none" }, 15.0);
+    tl.set(containerRef.current, { pointerEvents: "none" }, 4.0);
 
-    // Call onStartFade to trigger homepage fade-in (15.9s - 0.75s fade-out + 0.15s wait)
+    // Call onStartFade to trigger homepage fade-in (4.0s)
     tl.call(() => {
       if (onStartFadeRef.current) onStartFadeRef.current();
       window.dispatchEvent(new Event("pivot-intro-start-play"));
-    }, [], 15.9);
+    }, [], 4.0);
 
-    // Call onComplete to unmount the preloader (16.9s)
+    // Call onComplete to unmount the preloader (5.0s)
     tl.call(() => {
       if (onCompleteRef.current) onCompleteRef.current();
-    }, [], 16.9);
+    }, [], 5.0);
 
     return () => {
       window.removeEventListener("resize", handleResize);
@@ -469,21 +406,7 @@ export function Intro({ onStartFade, onComplete }: IntroProps) {
     };
   }, []);
 
-  const renderAnimatedSentence = (text: string, letterClass: string) => {
-    return text.split("\n").map((line, lineIdx) => (
-      <div key={lineIdx} className="flex flex-wrap justify-center w-full leading-[1.2]">
-        {line.split(" ").map((word, wordIdx) => (
-          <span key={wordIdx} className="inline-block whitespace-nowrap mx-[0.15em]">
-            {word.split("").map((char, charIdx) => (
-              <span key={charIdx} className={`${letterClass} inline-block opacity-0`} style={{ transition: "none" }}>
-                {char}
-              </span>
-            ))}
-          </span>
-        ))}
-      </div>
-    ));
-  };
+
 
   return (
     <div
@@ -528,35 +451,7 @@ export function Intro({ onStartFade, onComplete }: IntroProps) {
           <span className="intro-letter inline-block opacity-0">T</span>
         </div>
 
-        {/* Phase 2: Sentences */}
-        <div
-          ref={sentenceWrapperRef}
-          className="flex flex-col items-center justify-center text-center w-[90%] md:w-[60%] lg:w-[50%] max-w-[900px] absolute z-10"
-        >
-          {/* Sentence One */}
-          <div
-            id="sentence-one"
-            className="font-heading font-extrabold text-[#F8F6F2] text-[30px] md:text-[46px] lg:text-[clamp(52px,4.8vw,72px)] tracking-[-0.5px] text-center"
-            style={{
-              lineHeight: "1.2",
-              width: "100%",
-            }}
-          >
-            {renderAnimatedSentence("Vision begins with an idea.", "s1-letter")}
-          </div>
 
-          {/* Sentence Two */}
-          <div
-            id="sentence-two"
-            className="font-heading font-extrabold text-[#F8F6F2] text-[30px] md:text-[46px] lg:text-[clamp(52px,4.8vw,72px)] tracking-[-0.5px] text-center mt-[18px]"
-            style={{
-              lineHeight: "1.2",
-              width: "100%",
-            }}
-          >
-            {renderAnimatedSentence("Impact is built through execution.", "s2-letter")}
-          </div>
-        </div>
       </div>
     </div>
   );

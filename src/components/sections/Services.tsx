@@ -919,7 +919,7 @@ export function Services() {
         <span className="text-xs uppercase tracking-widest text-[#A96A4D] font-bold">
           Our Services
         </span>
-        <H2 className="uppercase text-[#1B2430]">How Can We Shape Your Digital Future?</H2>
+        <H2 className="uppercase text-[#1B2430] text-[28px] sm:text-[36px] md:text-[46px]">How Can We Shape Your Digital Future?</H2>
         <Body className="text-[#5B6575] leading-relaxed">
           Every business has a different destination. Explore how PIVOT transforms ideas into meaningful digital experiences.
         </Body>

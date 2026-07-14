@@ -84,7 +84,7 @@ export function Collaborators() {
     },
     {
       id: "pc-5",
-      name: "Apex Systems",
+      name: "Apex\nSystems",
       type: "Technology Partner",
       desc: "Configuring secure data transfer pipelines across regions.",
       banner: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=500&q=80",
@@ -286,7 +286,7 @@ export function Collaborators() {
                     <span className="inline-block px-2.5 py-1 rounded-full bg-[#A96A4D] text-[9px] font-bold text-white uppercase tracking-wider">
                       {card.type}
                     </span>
-                    <H3 className="text-[#1B2430] text-lg font-bold tracking-tight mt-1">{card.name}</H3>
+                    <H3 className="text-[#1B2430] text-lg sm:text-lg md:text-lg font-bold tracking-tight mt-1 whitespace-pre-line h-[48px] leading-6">{card.name}</H3>
                     <p className="text-[10px] text-[#5B6575] leading-relaxed font-sans mt-1">
                       {card.desc}
                     </p>
