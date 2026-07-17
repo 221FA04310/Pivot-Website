@@ -230,12 +230,12 @@ export function Collaborators() {
   return (
     <section
       ref={containerRef}
-      className="w-full relative min-h-screen flex flex-col justify-center py-[120px] px-6 sm:px-12 md:px-20 bg-[#FCFAF6] border-t border-border/40 select-none overflow-hidden"
+      className="w-full relative min-h-screen flex flex-col justify-center py-[120px] px-6 sm:px-12 md:px-20 bg-[#F5F9FA] dark:bg-[#071A2F] border-t border-[#1F6FA9]/10 select-none overflow-hidden transition-colors duration-500"
     >
       {/* 1. Volumetric lighting and floating dust */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden opacity-30">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[900px] h-[500px] rounded-full bg-accent-mutedGold/5 blur-[120px] animate-pulse-slow" />
-        <div className="absolute bottom-1/4 left-1/4 w-[600px] h-[400px] rounded-full bg-accent-terracotta/5 blur-[100px] animate-pulse-slow" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[900px] h-[500px] rounded-full bg-[#27A7A2]/5 dark:bg-[#27A7A2]/10 blur-[120px] animate-pulse-slow" />
+        <div className="absolute bottom-1/4 left-1/4 w-[600px] h-[400px] rounded-full bg-[#6FD7B7]/5 dark:bg-[#6FD7B7]/8 blur-[100px] animate-pulse-slow" />
       </div>
 
       <div className="max-w-[1400px] w-full mx-auto relative z-10 flex flex-col justify-between h-full">
@@ -245,11 +245,11 @@ export function Collaborators() {
           ref={introRef}
           className="max-w-[700px] mx-auto text-center flex flex-col items-center gap-4"
         >
-          <span className="text-xs uppercase tracking-widest text-[#A96A4D] font-bold">
+          <span className="text-xs uppercase tracking-widest text-[#1F6FA9] dark:text-[#6FD7B7] font-bold">
             COLLABORATORS
           </span>
-          <H2 className="uppercase text-[#1B2430]">Trusted by Visionaries Around the World</H2>
-          <Body className="text-[#5B6575] leading-relaxed text-sm sm:text-base">
+          <H2 className="uppercase text-[#0A3B66] dark:text-[#F8FBFC]">Trusted by Visionaries Around the World</H2>
+          <Body className="text-[#5B6575] dark:text-[#F8FBFC]/70 leading-relaxed text-sm sm:text-base">
             We partner with startups, enterprises and growing businesses to design, build and scale exceptional digital products.
           </Body>
         </div>
@@ -283,7 +283,7 @@ export function Collaborators() {
                 {/* Content Details (Always fully visible) */}
                 <div className="flex-1 flex flex-col justify-between pt-4 text-left">
                   <div className="space-y-1.5">
-                    <span className="inline-block px-2.5 py-1 rounded-full bg-[#A96A4D] text-[9px] font-bold text-white uppercase tracking-wider">
+                    <span className="inline-block px-2.5 py-1 rounded-full bg-[#27A7A2] text-[9px] font-bold text-white uppercase tracking-wider">
                       {card.type}
                     </span>
                     <H3 className="text-[#1B2430] text-lg sm:text-lg md:text-lg font-bold tracking-tight mt-1 whitespace-pre-line h-[48px] leading-6">{card.name}</H3>
