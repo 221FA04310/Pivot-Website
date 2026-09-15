@@ -1,10 +1,9 @@
 import { Navbar } from "@/components/sections/Navbar";
 import { Footer } from "@/components/sections/Footer";
 import { Button } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
 import { TechFlowDiagram } from "@/components/industries/TechFlowDiagram";
 import { industriesData } from "@/data/industryData";
-import { ArrowLeft, ArrowRight, CheckCircle2, ChevronRight, Sparkles, Layers, Shield, Cpu, Activity, GraduationCap, ShoppingBag, Rocket, Building2, Brain, CloudLightning, Briefcase } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2, ChevronRight, Sparkles, Layers, Cpu, Activity, GraduationCap, ShoppingBag, Rocket, Building2, Brain, CloudLightning, Briefcase } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
@@ -77,7 +76,7 @@ export default function IndustryDetailPage({ params }: { params: { slug: string 
 
             <div className="flex items-center gap-2 text-xs font-mono text-white/50">
               <span className="w-2 h-2 rounded-full" style={{ backgroundColor: industry.theme.highlightColor }} />
-              <span>INDUSTRY // {industry.number}</span>
+              <span>INDUSTRY {"//"} {industry.number}</span>
             </div>
           </div>
 
@@ -131,7 +130,7 @@ export default function IndustryDetailPage({ params }: { params: { slug: string 
           <section className="mb-24 pt-8 border-t border-white/10">
             <div className="mb-12">
               <div className="text-xs uppercase tracking-widest text-[#6FD7B7] font-bold font-mono mb-2">
-                01 // Industry Technology Scope
+                01 {"//"} Industry Technology Scope
               </div>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-bold text-white tracking-tight mb-4">
                 {industry.overview.sectionTitle}
@@ -179,7 +178,7 @@ export default function IndustryDetailPage({ params }: { params: { slug: string 
           <section className="mb-24 pt-8 border-t border-white/10">
             <div className="mb-10">
               <div className="text-xs uppercase tracking-widest text-[#6FD7B7] font-bold font-mono mb-2">
-                02 // Engineering Methodology
+                02 {"//"} Engineering Methodology
               </div>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-bold text-white tracking-tight mb-4">
                 {industry.approach.sectionTitle}
@@ -215,7 +214,7 @@ export default function IndustryDetailPage({ params }: { params: { slug: string 
           <section className="mb-24 pt-8 border-t border-white/10">
             <div className="mb-12">
               <div className="text-xs uppercase tracking-widest text-[#6FD7B7] font-bold font-mono mb-2">
-                03 // Technical Capabilities
+                03 {"//"} Technical Capabilities
               </div>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-bold text-white tracking-tight mb-4">
                 {industry.capabilities.sectionTitle}
@@ -260,7 +259,7 @@ export default function IndustryDetailPage({ params }: { params: { slug: string 
           <section className="mb-24 p-8 sm:p-12 rounded-3xl bg-gradient-to-b from-[#091E34]/90 to-[#071827] border border-white/10 shadow-2xl relative overflow-hidden">
             <div className="relative z-10">
               <div className="text-xs uppercase tracking-widest text-[#6FD7B7] font-bold font-mono mb-2">
-                04 // Architecture Foundation
+                04 {"//"} Architecture Foundation
               </div>
               <h2 className="text-2xl sm:text-4xl font-heading font-bold text-white tracking-tight mb-3">
                 {industry.foundation.sectionTitle}

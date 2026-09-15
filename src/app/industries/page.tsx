@@ -1,6 +1,5 @@
 import { Navbar } from "@/components/sections/Navbar";
 import { Footer } from "@/components/sections/Footer";
-import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { industriesData } from "@/data/industryData";
 import { 
@@ -80,7 +79,7 @@ export default function IndustriesIndexPage() {
                       <Icon className="w-6 h-6" />
                     </div>
                     <span className="text-xs font-mono text-white/40 font-bold tracking-widest">
-                      // {ind.number}
+                      {"//"} {ind.number}
                     </span>
                   </div>
 

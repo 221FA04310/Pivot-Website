@@ -7,11 +7,7 @@ import {
   Layout, 
   Database, 
   Cloud, 
-  Terminal, 
-  Code2, 
-  Check, 
-  Cpu, 
-  Layers
+  Terminal
 } from "lucide-react";
 import { cn } from "@/utils/cn";
 

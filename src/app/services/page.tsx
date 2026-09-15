@@ -21,11 +21,7 @@ import {
   HelpCircle, 
   ChevronDown, 
   Sparkles,
-  Layers,
-  Shield,
-  Activity,
-  Server,
-  Code
+  Layers
 } from "lucide-react";
 import { cn } from "@/utils/cn";
 

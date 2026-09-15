@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ArrowRight, ArrowLeftRight, CheckCircle2, Layers, Cpu, Cloud, Database, Globe, Smartphone, Zap, Sparkles, Activity, ShieldCheck, Box } from "lucide-react";
+import { ArrowRight, ArrowLeftRight, CheckCircle2, Layers, Cpu, Cloud, Database, Globe, Smartphone, Zap, Sparkles, ShieldCheck, Box } from "lucide-react";
 import { ArchitectureFlow } from "@/data/industryData";
 
 interface TechFlowDiagramProps {

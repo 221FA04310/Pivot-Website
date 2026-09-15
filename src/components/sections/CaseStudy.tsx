@@ -9,15 +9,12 @@ import {
   Compass, 
   CheckCircle, 
   Zap, 
-  Clock, 
   TrendingUp, 
   Users, 
   ArrowRight,
-  Sparkles,
   Layers
 } from "lucide-react";
 import { Button } from "../ui/Button";
-import { cn } from "@/utils/cn";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);

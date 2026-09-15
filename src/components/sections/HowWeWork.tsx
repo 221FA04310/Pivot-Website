@@ -8,8 +8,7 @@ import {
   Layers, 
   Code, 
   Rocket, 
-  ShieldCheck, 
-  ArrowRight
+  ShieldCheck
 } from "lucide-react";
 import { cn } from "@/utils/cn";
 
